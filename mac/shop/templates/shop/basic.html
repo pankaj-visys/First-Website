@@ -45,6 +45,7 @@
 
     </ul>
     <form method='get' action='/shop/search/' class="form-inline my-2 my-lg-0">
+      {% csrf_token %}
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" name="search" id="search">
       <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
@@ -68,6 +69,14 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
   </div>
 </nav>
 
+{% for message in messages  %}            
+      <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            <strong>Message : </strong> {{ message }}
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+      {% endfor %}
 
 
 
@@ -82,34 +91,35 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
         </button>
       </div>
       <div class="modal-body">
-        <form action= "/signup" method='post'>
+        <form action = 'signup/' method='post'>
   <div class="form-group">
     <label for="username">Username</label>
-    <input type="text" class="form-control" id="username" name="username" placeholder="Choose a unique username">
+    <input type="text" class="form-control" id="username" name="username" placeholder="Choose a unique username (Lowercase & Alphanumeric)" required>
   </div>
   <div class="form-group">
     <label for="fname">First Name</label>
-    <input type="text" class="form-control" id="fname" name="fname" placeholder="Enter Your First Name">
+    <input type="text" class="form-control" id="fname" name="fname" placeholder="Enter Your First Name" required>
   </div>
   <div class="form-group">
     <label for="lname">Last Name</label>
-    <input type="text" class="form-control" id="lname" name="lname" placeholder="Enter Your Last Name">
+    <input type="text" class="form-control" id="lname" name="lname" placeholder="Enter Your Last Name" required>
   </div>
   <div class="form-group">
     <label for="email">Email address</label>
-    <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com">
+    <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
   </div>
   <div class="form-group">
     <label for="pass1">Choose a password</label>
-    <input type="password" class="form-control" id="pass1" name="pass1" placeholder="Choose Your Password">
+    <input type="password" class="form-control" id="pass1" name="pass1" placeholder="Choose Your Password" required>
   </div>
   <div class="form-group">
     <label for="pass2">Confirm Password</label>
-    <input type="password" class="form-control" id="pass2" name="pass2" placeholder="Enter your password again">
+    <input type="password" class="form-control" id="pass2" name="pass2" placeholder="Enter your password again" required>
   </div>
  
 
         {% csrf_token %}
+        
         <button type="submit" class="btn btn-primary">Submit</button>
 </form>
       </div>
@@ -127,6 +137,34 @@ sagittis lacus vel augue laoreet rutrum faucibus.">
 
   {% block body %} {% endblock %}
 
+  <!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModal" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="loginModalTitle">Login Here</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form action = 'login/' method='post'>
+          {% csrf_token %}
+  <div class="form-group">
+    <label for="username">Username</label>
+    <input type="text" class="form-control" id="loginusername" name="loginusername" placeholder="Choose a unique username">
+  </div>
+  <div class="form-group">
+    <label for="pass">Enter your password </label>
+    <input type="password" class="form-control" id="loginpassword" name="loginpassword" placeholder="Enter your password ">
+  </div>
+ 
+        <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+      </div>
+       <div class="modal-footer">
+      </div>
+          
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.js"

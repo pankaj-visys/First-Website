@@ -1,10 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse, redirect
 from .models import Product, Contact, Orders, OrderUpdate
 from math import ceil
 import json
+from django.contrib import messages
+from django.contrib.auth  import authenticate,  login, logout
+from django.contrib.auth.models import User
+# from contextlib import redirect
 
 # Create your views here.
+
 from django.http import HttpResponse
+
 
 
 def index(request):
@@ -113,3 +119,66 @@ def checkout(request):
         id = order.order_id
         return render(request, 'shop/checkout.html', {'thank':thank, 'id': id})
     return render(request, 'shop/checkout.html')
+
+
+
+
+
+def handleSignup(request):
+    if request.method == "POST":
+        # Get the post parameters
+        username = request.POST['username']
+        fname = request.POST['fname']
+        lname = request.POST['lname']
+        email = request.POST['email']
+        pass1 = request.POST['pass1']
+        pass2 = request.POST['pass2']
+
+        # check for errorneous input
+
+        if len(username)>10:
+            messages.error(request, " Your user name must be under 10 characters")
+            return redirect('ShopHome')
+
+        if not username.isalnum():
+            messages.error(request, " User name should only contain letters and numbers")
+            return redirect('ShopHome')
+        if (pass1!= pass2):
+             messages.error(request, " Passwords do not match")
+             return redirect('ShopHome')
+        
+        # Create the user
+        myuser = User.objects.create_user(username, email, pass1)
+        myuser.first_name= fname
+        myuser.last_name= lname
+        myuser.save()
+        messages.success(request, " Your iCoder has been successfully created")
+        # return render(request, 'shop/index.html')
+        return redirect('ShopHome')
+
+    else:
+        
+        return HttpResponse("404 - Not found")
+
+
+def handleLogin(request):
+    if request.method=="POST":
+        # Get the post parameters
+        loginusername=request.POST['loginusername']
+        loginpassword=request.POST['loginpassword']
+        
+        user=authenticate(username= loginusername, password= loginpassword)
+
+        if user is not None:
+            login(request, user)
+            messages.success(request, "Successfully Logged In")
+            return redirect('ShopHome')
+        else:
+            messages.error(request, "Invalid credentials! Please try again")
+            return redirect('ShopHome')
+        
+        HttpResponse("Login")
+
+
+def handleLogout(request):
+        HttpResponse("Logout")
