@@ -177,8 +177,12 @@ def handleLogin(request):
             messages.error(request, "Invalid credentials! Please try again")
             return redirect('ShopHome')
         
-        HttpResponse("Login")
+        return HttpResponse("404- Not found")
 
 
 def handleLogout(request):
+    
+        logout(request)
+        messages.success(request, "Successfully logged out")
+        return redirect('ShopHome')
         HttpResponse("Logout")
